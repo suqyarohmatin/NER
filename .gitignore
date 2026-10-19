@@ -1,0 +1,18 @@
+# File csv mentah dan data hasil pengolahan
+data/raw/
+data/processed/
+data/annotations/
+
+# Model hasil training
+models/
+
+# File sementara Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+
+# Notebook checkpoint
+.ipynb_checkpoints/
