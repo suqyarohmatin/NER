@@ -7,7 +7,7 @@ Proyek ini dibangun untuk menerapkan teknik Named-Entity Recognition (NER), yait
 ## Daftar Isi
 1. [Tentang Proyek](#-tentang-proyek)
 2. [Dataset](#-dataset)
-3. [Arsitektur & Alur Kerja](#-arsitektur--alur-kerja)
+3. [Alur Kerja](#-alur-kerja)
 4. [Struktur Repositori](#-struktur-repositori)
 5. [Evaluasi Model](#-evaluasi-model)
 6. [Kasus Uji (Test Cases)](#-kasus-uji-test-cases)
@@ -166,11 +166,11 @@ Sistem ini memisahkan dua alur utama: **Pipeline Pengembangan Model (Offline/Tra
 ## 5. Evaluasi Model
 Evaluasi model dihitung menggunakan skrip `src/evaluate_model.py` dan `src/metrics.py` pada data uji (*test set*) menggunakan metrik evaluasi pencocokan rentang karakter dan tipe label secara tepat. Bobot model hasil pelatihan dimuat dari direktori `models/trained/`.
 
-| Metrik | Model Baseline | Model Terlatih | Peningkatan |
-|---|:---:|:---:|:---:|
-| **Precision** | 0.180 |0.951 | *[+Δ%]* |
-| **Recall** | 0.578 | 0.985 | *[+Δ%]* |
-| **F1-Score** | 0.274 | 0.968 | *[+Δ%]* |
+| Metrik | Model Baseline | Model Terlatih |
+|---|:---:|:---:|
+| **Precision** | 0.180 |0.951|
+| **Recall** | 0.578 | 0.985 |
+| **F1-Score** | 0.274 | 0.968 |
 
 ### Temuan Evaluasi & Analisis Data:
 - **Baseline vs. Adaptasi:** Model terlatih `ner_custom_v1` menunjukkan peningkatan kemampuan deteksi pada entitas spesifik domain perbankan dan singkatan korporat.
@@ -191,6 +191,6 @@ Pengujian sistem dilakukan secara otomatis menggunakan `pytest` (melalui berkas 
 
 ## 7. Tim Pengembang
 
-- Role 1 (Data & Anotasi): Pembersihan dataset, validasi teks artikel, penyiapan anotasi label, dan audit konsistensi ground truth.
-- Role 2 (Model & Evaluasi): Pelatihan/adaptasi pipeline spaCy ner_custom_v1, tuning hyperparameter, serta evaluasi metrik (Precision, Recall, F1).
-- Role 3 (Layanan & Deployment): Pembuatan backend FastAPI, UI frontend, penanganan span offset, dan otomasi pengujian API via Pytest/Colab.
+- Role 1 **(Data & Anotasi)**: Pembersihan dataset, validasi teks artikel, penyiapan anotasi label, dan audit konsistensi ground truth.
+- Role 2 **(Model & Evaluasi)**: Pelatihan/adaptasi pipeline spaCy ner_custom_v1, tuning hyperparameter, serta evaluasi metrik (Precision, Recall, F1).
+- Role 3 **(Layanan & Deployment)**: Pembuatan backend FastAPI, UI frontend, penanganan span offset, dan otomasi pengujian API via Pytest/Colab.
