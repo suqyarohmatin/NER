@@ -120,27 +120,51 @@ Sistem ini memisahkan dua alur utama: **Pipeline Pengembangan Model (Offline/Tra
 ## 4. Struktur Repositori
 
 ```text
-├── app/
-│   └── main.py                     # Backend API (FastAPI)
-├── web/
-│   └── index.html                  # Antarmuka web pengguna
+├── data/
+│   ├── annotations/               # Data anotasi entitas acuan
+│   └── readme.md                  # Dokumentasi panduan dataset
 ├── models/
-│   ├── ner_custom_v1.zip           # Bobot pipeline model spaCy terlatih
-│   ├── Data_&_Anotasi.ipynb        # Notebook persiapan data & anotasi
-│   └── Training_Model_NER_UTS.ipynb# Notebook pelatihan model
+│   └── trained/                   # Direktori artefak model hasil training
 ├── notebooks/
-│   ├── 01_profiling_dataset.ipynb  # Profiling data awal
-│   ├── 02_prepare_annotation.ipynb # Format anotasi entitas
-│   └── 03_train_evaluate_ner.ipynb # Evaluasi & perbandingan model
+│   └── Maybank_NER_Workflow.ipynb # Eksplorasi data & pipeline pelatihan model
+├── reports/
+│   └── data_audit.json            # Laporan audit kualitas dan konsistensi data
+├── src/
+│   ├── __init__.py
+│   ├── app.py                     # Entrypoint server backend API / Web UI
+│   ├── audit_maybank_ner.py       # Script audit entitas Maybank NER
+│   ├── check_article_encoding.py  # Pemeriksaan encoding karakter artikel
+│   ├── compare_all_annotations.py # Komparasi seluruh versi anotasi
+│   ├── compare_entity_differences.py
+│   ├── compare_second_article.py
+│   ├── evaluate_model.py          # Evaluasi metrik performa model (P, R, F1)
+│   ├── export_reviewed.py         # Ekspor data anotasi hasil review
+│   ├── fix_first_annotation.py    # Perbaikan anotasi artikel pertama
+│   ├── fix_myor_klibor.py         # Normalisasi istilah finansial (MYOR/KLIBOR)
+│   ├── fix_second_annotation.py   # Perbaikan anotasi artikel kedua
+│   ├── make_annotation_template.py# Generator template anotasi entitas
+│   ├── metrics.py                 # Perhitungan metrik evaluasi (exact span)
+│   ├── prepare_data.py            # Pembersihan & preprocessing teks artikel
+│   ├── review_annotations.py      # Script peninjauan anotasi entitas
+│   ├── review_second_annotation.py
+│   ├── save_first_review.py
+│   ├── save_second_review.py
+│   ├── show_article_chunks.py     # Pengecekan chunk / tokenisasi teks panjang
+│   ├── split_data.py              # Pembagian dataset (Train/Val/Test)
+│   ├── train_model.py             # Script pelatihan & adaptasi model spaCy
+│   └── validate_annotations.py   # Validasi skema dan span karakter anotasi
+├── templates/
+│   └── index.html                 # Tampilan antarmuka web pengguna
 ├── tests/
-│   └── test_api.py                 # Pengujian otomatis API (Pytest)
-├── docs/
-│   └── role2_evaluation_audit.md   # Catatan audit evaluasi model
-└── requirements.txt                # Daftar pustaka & dependensi
+│   └── test_api.py                # Pengujian otomatis endpoint API
+├── .gitignore
+├── COLAB_GUIDE.md                 # Panduan menjalankan aplikasi di Google Colab
+├── README.md                      # Dokumentasi utama proyek
+└── requirements.txt               # Daftar pustaka & dependensi Python
 ```
 
 ## 5. Evaluasi Model
-Kinerja model diuji pada data uji (*test set*) menggunakan evaluasi pencocokan rentang karakter dan tipe label secara tepat (*exact span & entity type matching*).
+Evaluasi model dihitung menggunakan skrip `src/evaluate_model.py` dan `src/metrics.py` pada data uji (*test set*) menggunakan metrik evaluasi pencocokan rentang karakter dan tipe label secara tepat. Bobot model hasil pelatihan dimuat dari direktori `models/trained/`.
 
 | Metrik | Model Baseline | Model Terlatih (`ner_custom_v1`) | Peningkatan |
 |---|:---:|:---:|:---:|
@@ -148,14 +172,14 @@ Kinerja model diuji pada data uji (*test set*) menggunakan evaluasi pencocokan r
 | **Recall** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
 | **F1-Score** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
 
-### Temuan Evaluasi & Analisis Kesalahan:
+### Temuan Evaluasi & Analisis Data:
 - **Baseline vs. Adaptasi:** Model terlatih `ner_custom_v1` menunjukkan peningkatan kemampuan deteksi pada entitas spesifik domain perbankan dan singkatan korporat.
 - **Span Boundary Error:** Kesalahan yang masih ditemukan umumnya berupa pemotongan batas teks (*boundary span*) pada nama entitas organisasi yang panjang atau bertingkat.
 - **Kategori Tertinggi:** Entitas lokasi (`GPE`) dan orang (`PERSON`) memiliki tingkat akurasi paling stabil dibandingkan entitas lembaga perbankan kompleks (`ORG`).
 
-## 8. Kasus Uji (Test Cases)
+## 6. Kasus Uji (Test Cases)
 
-Pengujian sistem dilakukan secara otomatis menggunakan `pytest` (melalui berkas `tests/test_api.py`) untuk memvalidasi fungsionalitas inferensi model, penanganan anomali input, serta stabilitas endpoint API.
+Pengujian sistem dilakukan secara otomatis menggunakan `pytest` (melalui berkas `tests/test_api.py`) untuk menguji endpoint API pada src/app.py, validasi skema input, serta ketepatan indeks rentang karakter entitas.
 
 | No | Skenario Uji | Deskripsi Input | Hasil yang Diharapkan | Status |
 |:--:|---|---|---|:--:|
@@ -165,7 +189,7 @@ Pengujian sistem dilakukan secara otomatis menggunakan `pytest` (melalui berkas 
 | 4 | **Repeated Entities** | Entitas yang sama muncul berulang kali di dalam teks artikel | Semua kemunculan terdeteksi dengan indeks karakter unik masing-masing | Passed |
 | 5 | **Long Text Document** | Artikel berita panjang (> 1.500 kata) | Berhasil diproses tanpa kendala memori maupun *timeout* API | Passed |
 
-## 9. Tim Pengembang
+## 7. Tim Pengembang
 
 - Role 1 (Data & Anotasi): Pembersihan dataset, validasi teks artikel, penyiapan anotasi label, dan audit konsistensi ground truth.
 - Role 2 (Model & Evaluasi): Pelatihan/adaptasi pipeline spaCy ner_custom_v1, tuning hyperparameter, serta evaluasi metrik (Precision, Recall, F1).
