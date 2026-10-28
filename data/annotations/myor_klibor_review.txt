@@ -1,0 +1,87 @@
+notepad data/annotations/myor_klibor_review.txtJumlah temuan: 14
+
+1. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 55:59
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+PETALING JAYA: UOB Malaysia, RHB Banking 
+
+2. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 967:971
+   Entitas: MYOR | Label: ORG
+   Status: PERIKSA KONSISTENSI: label saat ini ORG
+   Konteks: involved. By helping establish a transparent Malaysia Overnight Rate (MYOR) funding curve and an observable reference point for three-month inte
+
+3. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 1118:1122
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: unding, the transaction improves visibility into funding spreads over MYOR and banks’ cost of borrowing, supporting more efficient pricing acros
+
+4. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 1531:1535
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: ntry’s financial markets. By establishing a transparent benchmark for MYOR-based funding, we are contributing to greater price discovery and hel
+
+5. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 1974:1978
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: inancial ecosystem with global standards.” The transaction references MYOR compounded in arrears with a two-day lookback mechanism, providing op
+
+6. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 2310:2314
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: saction demonstrates how market participants can work together to put MYOR-based conventions into practice and support the continued development
+
+7. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 2469:2475
+   Entitas: KLIBOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: money market. “As the industry progresses towards the transition from KLIBOR to MYOR, it is important that we build practical market experience an
+
+8. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 2479:2483
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: et. “As the industry progresses towards the transition from KLIBOR to MYOR, it is important that we build practical market experience and develo
+
+9. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 2701:2705
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: Bank Negara Malaysia’s efforts to develop a deeper and more efficient MYOR market, and to playing an active role in the continued development of
+
+10. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 2971:2975
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: “Maybank is pleased to have played an integral role in this inaugural MYOR-based money market transaction. It marks an important first step in e
+
+11. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 3153:3157
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: liquidity, while setting the stage for widening the aperture for more MYOR-linked solutions and supporting robust price discovery for market par
+
+12. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 3432:3436
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: a’s financial market infrastructure.” Bank Negara Malaysia introduced MYOR in September 2021 as Malaysia’s Alternative Reference Rate (ARR). MYO
+
+13. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 3503:3507
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks: YOR in September 2021 as Malaysia’s Alternative Reference Rate (ARR). MYOR is calculated as the volume-weighted average rate of actual unsecured
+
+14. UOB Malaysia, RHB Banking and Maybank execute landmark MYOR-based transaction - Newswav
+   Posisi: 3727:3731
+   Entitas: MYOR | Label: GPE
+   Status: PERLU DITINJAU: GPE kemungkinan salah
+   Konteks:  in deep and liquid overnight funding markets. The transition towards MYOR aligns Malaysia with other major financial markets that have adopted 
+
