@@ -166,11 +166,11 @@ Sistem ini memisahkan dua alur utama: **Pipeline Pengembangan Model (Offline/Tra
 ## 5. Evaluasi Model
 Evaluasi model dihitung menggunakan skrip `src/evaluate_model.py` dan `src/metrics.py` pada data uji (*test set*) menggunakan metrik evaluasi pencocokan rentang karakter dan tipe label secara tepat. Bobot model hasil pelatihan dimuat dari direktori `models/trained/`.
 
-| Metrik | Model Baseline | Model Terlatih (`ner_custom_v1`) | Peningkatan |
+| Metrik | Model Baseline | Model Terlatih | Peningkatan |
 |---|:---:|:---:|:---:|
-| **Precision** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
-| **Recall** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
-| **F1-Score** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
+| **Precision** | 0.180 |0.951 | *[+Δ%]* |
+| **Recall** | 0.578 | 0.985 | *[+Δ%]* |
+| **F1-Score** | 0.274 | 0.968 | *[+Δ%]* |
 
 ### Temuan Evaluasi & Analisis Data:
 - **Baseline vs. Adaptasi:** Model terlatih `ner_custom_v1` menunjukkan peningkatan kemampuan deteksi pada entitas spesifik domain perbankan dan singkatan korporat.
