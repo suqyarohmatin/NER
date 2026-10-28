@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maybank Article NER Service</title>
+<style>
+:root{--ui:"Segoe UI Variable","Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;--read:Georgia,"Times New Roman",serif;
+--bg:#f4f6f9;--card:#fff;--ink:#1b2230;--muted:#667085;--line:#e2e6ec;--soft:#f7f8fa;
+--pri:#23529f;--pri-h:#1b4285;--pri-ink:#fff;--pri-soft:#e8eefb;--ok:#0f6b3f;--ok-bg:#e8f6ee;--warn:#8a5a00;--warn-bg:#fff3d6;--err:#b42318;--err-bg:#fdecea;--focus:#1d4ed8;
+--soft-s:90%;--soft-l:92%;--txt-l:28%;--mk-s:92%;--mk-l:85%;--ul-l:45%;--tg-l:40%;--tg-ink:#fff;--shadow:0 1px 2px rgba(16,24,40,.05),0 6px 18px rgba(16,24,40,.05)}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1116;--card:#161a22;--ink:#eceef2;--muted:#a1a9b6;--line:#272c36;--soft:#1b2029;
+--pri:#5b8def;--pri-h:#7aa2f5;--pri-ink:#0b1220;--pri-soft:#18233d;--ok:#5fd6a0;--ok-bg:#12301f;--warn:#ffd766;--warn-bg:#3a2e08;--err:#ff8a7d;--err-bg:#3a1613;--focus:#8ab4ff;
+--soft-s:45%;--soft-l:24%;--txt-l:82%;--mk-s:45%;--mk-l:28%;--ul-l:62%;--tg-l:62%;--tg-ink:#101216;--shadow:none}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 var(--ui);color:var(--ink);background:var(--bg)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+.top{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;padding-top:26px;padding-bottom:6px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{width:50px;height:50px;border-radius:12px;background:var(--pri);color:var(--pri-ink);display:grid;place-items:center;font-weight:800;letter-spacing:.02em}
+.brand h1{margin:0;font-size:1.35rem;line-height:1.2;letter-spacing:-.01em}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.93rem}
+.nav{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center}
+.nav a{color:var(--pri);text-decoration:none;font-size:.95rem}.nav a:hover{text-decoration:underline}
+.status-pill{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.92rem}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted)}
+.status-pill.ok .dot{background:#16a34a}.status-pill.warn .dot{background:#e0a100}.status-pill.off .dot{background:#d92d20}
+.intro{margin:18px auto 22px;font-size:1.05rem}
+.grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:960px){.grid{grid-template-columns:1fr}.wrap{padding:0 16px}}
+.side{display:grid;gap:24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:var(--shadow)}
+.card h2{margin:0 0 4px;font-size:1.3rem;letter-spacing:-.01em}
+.card h3{margin:26px 0 12px;font-size:1.05rem}
+.sub{margin:0 0 20px;color:var(--muted);font-size:.93rem}
+label{display:block;font-weight:650;margin-bottom:6px}
+input,textarea{width:100%;font:inherit;font-size:1.05rem;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+input:hover,textarea:hover{border-color:var(--muted)}
+input:focus,textarea:focus{border-color:var(--pri)}
+textarea{min-height:240px;resize:vertical;line-height:1.6}
+[aria-invalid="true"]{border-color:var(--err)}
+.hint{display:flex;justify-content:space-between;gap:12px;margin:6px 0 20px;color:var(--muted);font-size:.85rem}
+.hint .err{color:var(--err)}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+button{font:inherit;cursor:pointer}
+.primary{display:inline-flex;align-items:center;gap:9px;background:var(--pri);color:var(--pri-ink);border:0;border-radius:10px;padding:12px 22px;font-weight:700}
+.primary:hover{background:var(--pri-h)}.primary:disabled{opacity:.75;cursor:progress}
+.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:12px 18px;font-weight:650}
+.ghost:hover{border-color:var(--muted)}
+.spin{width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:r .7s linear infinite}
+@keyframes r{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.msg{margin-top:18px;border-radius:10px;padding:12px 15px;font-size:.93rem}.msg:empty{display:none}
+.msg.ok{background:var(--ok-bg);color:var(--ok)}.msg.err{background:var(--err-bg);color:var(--err)}.msg.busy{background:var(--pri-soft);color:var(--pri)}
+.legend{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:4px}
+.legend-row{display:grid;grid-template-columns:78px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:6px 8px;color:var(--ink)}
+.legend-row:enabled:hover{background:var(--soft)}.legend-row:disabled{cursor:default}
+.legend-row[aria-pressed="false"] .desc,.legend-row[aria-pressed="false"] .n{color:var(--muted);text-decoration:line-through}
+.legend-row[aria-pressed="false"] .tag{opacity:.45}
+.legend-row .n{font-variant-numeric:tabular-nums;font-weight:700;color:var(--muted);min-width:1.6em;text-align:right}
+.tag{display:inline-block;text-align:center;font-weight:700;font-size:.82rem;padding:3px 10px;border-radius:7px;background:hsl(var(--h) var(--soft-s) var(--soft-l));color:hsl(var(--h) 70% var(--txt-l))}
+.note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:13px 15px;color:var(--muted);font-size:.88rem}
+ol.steps{margin:0 0 18px;padding-left:22px;color:var(--muted)}ol.steps li{padding:2px 0}ol.steps b{color:var(--ink)}
+.results{margin-top:24px}
+.res-head{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.res-head .sub{margin:0}
+.chip{border:1px solid var(--line);border-radius:8px;padding:5px 12px;font-size:.88rem;background:var(--card)}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:40px 24px;text-align:center;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:640px){.stats{grid-template-columns:1fr}}
+.stat{border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.stat span{display:block;color:var(--muted);font-size:.85rem}.stat b{display:block;font-size:1.6rem;line-height:1.3}
+.reading{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:24px 28px}
+.doc-title{font:700 1.35rem/1.4 var(--ui);margin:0 0 14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.doc-body{font:1.06rem/2.2 var(--read);white-space:pre-wrap;overflow-wrap:anywhere;max-width:76ch}
+.ent{color:inherit;background:hsl(var(--h) var(--mk-s) var(--mk-l));box-shadow:inset 0 -2px 0 hsl(var(--h) 65% var(--ul-l));border-radius:3px;padding:1px 2px}
+.ent::after{content:attr(data-label);font:700 .62rem/1 var(--ui);margin-left:5px;padding:2px 5px;border-radius:3px;background:hsl(var(--h) 65% var(--tg-l));color:var(--tg-ink);vertical-align:.2em}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px 16px;text-align:left;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+th{font-size:.86rem;color:var(--muted);font-weight:600;background:var(--soft)}tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+</style>
+</head>
+<body>
+<header class="top wrap">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">NER</div>
+    <div><h1>Maybank Article NER Service</h1><p>Named-Entity Recognition untuk artikel berita</p></div>
+  </div>
+  <nav class="nav" aria-label="Tautan layanan">
+    <a href="/docs" target="_blank" rel="noopener">API Docs</a>
+    <a href="/health" target="_blank" rel="noopener">Info Model</a>
+    <span id="pill" class="status-pill"><i class="dot"></i><span id="pill-text">Memeriksa model…</span></span>
+  </nav>
+</header>
+<p class="intro wrap">Masukkan judul dan isi artikel untuk menemukan nama orang, organisasi, lokasi, tanggal, atau peristiwa yang dikenali model.</p>
+
+<main class="wrap">
+  <div class="grid">
+    <section class="card" aria-labelledby="h-form">
+      <h2 id="h-form">Analisis Artikel</h2>
+      <p class="sub">Isi kedua kolom di bawah. Form dimulai kosong supaya kamu bisa memasukkan artikel pilihanmu sendiri.</p>
+      <form id="ner-form" novalidate>
+        <label for="title">Judul artikel</label>
+        <input id="title" maxlength="500" placeholder="Masukkan judul artikel" autocomplete="off" aria-describedby="e-title">
+        <div class="hint"><span id="e-title">Judul artikel</span><span id="c-title">0 / 500</span></div>
+        <label for="body">Isi artikel</label>
+        <textarea id="body" maxlength="49000" placeholder="Tempel isi artikel di sini" aria-describedby="e-body"></textarea>
+        <div class="hint"><span id="e-body">Maksimal 49.000 karakter (batas gabungan 50.000)</span><span id="c-body">0 / 49.000</span></div>
+        <div class="actions">
+          <button id="submit-btn" class="primary" type="submit"><span id="spin" class="spin" hidden></span><span id="btn-label">Analisis Entitas</span></button>
+          <button id="sample" class="ghost" type="button">Isi Contoh</button>
+          <button id="clear" class="ghost" type="button">Hapus Isi</button>
+        </div>
+        <div id="status" class="msg" role="status" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <aside class="side">
+      <section class="card" aria-labelledby="h-legend">
+        <h2 id="h-legend">Jenis Entitas</h2>
+        <p class="sub">Kategori yang ditampilkan oleh model. Setelah analisis, klik label untuk menyaring hasil.</p>
+        <ul id="legend" class="legend"></ul>
+        <div class="note">Model tidak selalu menemukan semua entitas dan bisa salah menentukan label. Periksa hasilnya sebelum menyimpulkan.</div>
+      </section>
+      <section class="card" aria-labelledby="h-how">
+        <h2 id="h-how">Cara Menggunakan</h2>
+        <ol class="steps"><li>Isi judul dan isi artikel.</li><li>Klik <b>Analisis Entitas</b>.</li><li>Periksa tabel hasil dan bagian teks yang disorot.</li></ol>
+        <div class="note">Posisi karakter merujuk pada teks gabungan judul + baris baru + isi artikel. Start inklusif, end eksklusif.</div>
+      </section>
+    </aside>
+  </div>
+
+  <section class="card results" aria-labelledby="h-res">
+    <div class="res-head">
+      <div><h2 id="h-res">Hasil Ekstraksi</h2><p id="res-sub" class="sub">Belum ada hasil.</p></div>
+      <span id="res-model" class="chip" hidden></span>
+    </div>
+    <div id="empty" class="empty">Hasil analisis akan tampil di sini setelah kamu menekan Analisis Entitas.</div>
+    <div id="result" hidden>
+      <div class="stats">
+        <div class="stat"><span>Entitas ditemukan</span><b id="st-count"></b></div>
+        <div class="stat"><span>Jenis entitas</span><b id="st-types"></b></div>
+        <div class="stat"><span>Waktu proses</span><b id="st-time"></b></div>
+      </div>
+      <h3>Teks dengan entitas ditandai</h3>
+      <article class="reading"><div id="doc-title" class="doc-title"></div><div id="doc-body" class="doc-body"></div></article>
+      <h3>Daftar entitas</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Teks entitas</th><th>Label</th><th class="num">Start</th><th class="num">End</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+    </div>
+  </section>
+  <div style="height:48px"></div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const LABELS = [['PERSON','Nama orang'],['ORG','Organisasi atau perusahaan'],['GPE','Negara atau wilayah administratif'],['LOC','Lokasi geografis'],['DATE','Tanggal atau waktu'],['EVENT','Nama peristiwa']];
+const HUES = {PERSON:25, ORG:145, GPE:215, LOC:265, DATE:335, EVENT:45};
+const SAMPLE = {
+  title: 'Maybank expands partnership with Malaysian government',
+  body: 'Maybank announced a new partnership with the Government of Malaysia on 28 October 2026. Chief executive Aisha Tan said the programme will support small businesses in Selangor and Penang. Bank Negara Malaysia and the Securities Commission attended the signing in Kuala Lumpur, where Maybank also opened a new branch.'
+};
+const state = {title:'', combined:'', ents:[], off:new Set(), has:false};
+const fmt = n => n.toLocaleString('id-ID');
+const hue = l => { if (l in HUES) return HUES[l]; let h = 0; for (const c of l) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+
+function buildLegend(counts) {
+  const ul = $('legend'); ul.replaceChildren();
+  const rows = [...LABELS];
+  Object.keys(counts).forEach(l => { if (!LABELS.some(x => x[0] === l)) rows.push([l, 'Label tambahan dari model']); });
+  rows.forEach(([label, desc]) => {
+    const li = document.createElement('li'), b = document.createElement('button');
+    b.type = 'button'; b.className = 'legend-row'; b.disabled = !state.has;
+    b.style.setProperty('--h', hue(label));
+    b.setAttribute('aria-pressed', state.off.has(label) ? 'false' : 'true');
+    const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = label;
+    const d = document.createElement('span'); d.className = 'desc'; d.textContent = desc;
+    const n = document.createElement('span'); n.className = 'n'; n.textContent = state.has ? (counts[label] || 0) : '';
+    b.append(tag, d, n);
+    b.addEventListener('click', () => {
+      state.off.has(label) ? state.off.delete(label) : state.off.add(label);
+      b.setAttribute('aria-pressed', state.off.has(label) ? 'false' : 'true');
+      paintText(); paintRows();
+    });
+    li.append(b); ul.append(li);
+  });
+}
+
+function appendText(parent, text, label) {
+  if (!label) { parent.append(document.createTextNode(text)); return; }
+  const m = document.createElement('mark');
+  m.className = 'ent'; m.style.setProperty('--h', hue(label)); m.dataset.label = label; m.textContent = text;
+  parent.append(m);
+}
+
+function paintText() {
+  const tEl = $('doc-title'), bEl = $('doc-body');
+  tEl.replaceChildren(); bEl.replaceChildren();
+  const text = state.combined, T = state.title.length;
+  const emit = (s, e, label) => {
+    if (e <= s) return;
+    if (s < T && e > T) { emit(s, T, label); emit(T, e, label); return; }
+    if (s >= T) { const bs = Math.max(s, T + 1); if (e > bs) appendText(bEl, text.slice(bs, e), label); return; }
+    appendText(tEl, text.slice(s, e), label);
+  };
+  const hl = state.ents.filter(en => en.ok && !state.off.has(en.label)).sort((a, b) => a.start - b.start);
+  let pos = 0;
+  for (const en of hl) { if (en.start < pos) continue; emit(pos, en.start); emit(en.start, en.end, en.label); pos = en.end; }
+  emit(pos, text.length);
+}
+
+function paintRows() {
+  const tbody = $('rows'); tbody.replaceChildren();
+  const shown = state.ents.filter(en => !state.off.has(en.label));
+  if (!shown.length) {
+    const tr = document.createElement('tr'), td = document.createElement('td');
+    td.colSpan = 4; td.style.color = 'var(--muted)';
+    td.textContent = state.ents.length ? 'Semua label disembunyikan. Aktifkan satu label di panel Jenis Entitas.' : 'Tidak ada entitas yang terdeteksi.';
+    tr.append(td); tbody.append(tr); return;
+  }
+  for (const en of shown) {
+    const tr = document.createElement('tr');
+    const t = document.createElement('td'); t.textContent = en.text;
+    const l = document.createElement('td'), tag = document.createElement('span');
+    tag.className = 'tag'; tag.style.setProperty('--h', hue(en.label)); tag.textContent = en.label; l.append(tag);
+    const s = document.createElement('td'); s.className = 'num'; s.textContent = en.start;
+    const e = document.createElement('td'); e.className = 'num'; e.textContent = en.end;
+    tr.append(t, l, s, e); tbody.append(tr);
+  }
+}
+
+function render(title, body, data, ms) {
+  state.title = title; state.combined = title + '\n' + body; state.off = new Set(); state.has = true;
+  state.ents = (data.entities || []).map(en => ({...en,
+    ok: Number.isInteger(en.start) && Number.isInteger(en.end) && state.combined.slice(en.start, en.end) === en.text}));
+  const counts = {}; state.ents.forEach(en => counts[en.label] = (counts[en.label] || 0) + 1);
+  const meta = data.meta || {};
+  buildLegend(counts); paintText(); paintRows();
+  $('st-count').textContent = fmt(state.ents.length);
+  $('st-types').textContent = fmt(Object.keys(counts).length);
+  $('st-time').textContent = ms < 1000 ? Math.round(ms) + ' ms' : (ms / 1000).toFixed(2).replace('.', ',') + ' detik';
+  $('res-sub').textContent = 'Proses selesai. ' + fmt(state.ents.length) + ' entitas ditemukan.';
+  $('res-model').textContent = (meta.model || 'model tidak diketahui');
+  $('res-model').hidden = false;
+  $('empty').hidden = true; $('result').hidden = false;
+}
+
+function setMsg(kind, text) { const el = $('status'); el.className = 'msg' + (kind ? ' ' + kind : ''); el.textContent = text; }
+function fieldError(id, msg, base) {
+  const el = $('e-' + id); el.textContent = msg || base; el.className = msg ? 'err' : '';
+  $(id).setAttribute('aria-invalid', msg ? 'true' : 'false');
+}
+function counters() {
+  $('c-title').textContent = fmt($('title').value.length) + ' / 500';
+  $('c-body').textContent = fmt($('body').value.length) + ' / 49.000';
+}
+function setBusy(b) {
+  $('submit-btn').disabled = b; $('spin').hidden = !b;
+  $('btn-label').textContent = b ? 'Menganalisis…' : 'Analisis Entitas';
+}
+
+$('ner-form').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  const title = $('title').value.trim(), body = $('body').value.trim();
+  fieldError('title', title ? '' : 'Judul artikel tidak boleh kosong.', 'Judul artikel');
+  fieldError('body', body ? '' : 'Isi artikel tidak boleh kosong.', 'Maksimal 49.000 karakter (batas gabungan 50.000)');
+  if (!title) { $('title').focus(); return; }
+  if (!body) { $('body').focus(); return; }
+  setBusy(true); setMsg('busy', 'Sedang memproses artikel…');
+  const t0 = performance.now();
+  try {
+    const res = await fetch('/extract-entities', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({title, body})});
+    let data = {}; try { data = await res.json(); } catch (_) {}
+    if (!res.ok) throw new Error(data.error || 'Permintaan gagal (status ' + res.status + ').');
+    render(title, body, data, performance.now() - t0);
+    setMsg('ok', 'Artikel berhasil dianalisis. Periksa label dan posisi karakter pada hasil di bawah.');
+  } catch (err) {
+    setMsg('err', err instanceof TypeError ? 'Tidak bisa menghubungi server. Pastikan layanan masih berjalan, lalu coba lagi.' : err.message);
+  } finally { setBusy(false); }
+});
+
+['title', 'body'].forEach(id => $(id).addEventListener('input', () => {
+  fieldError(id, '', id === 'title' ? 'Judul artikel' : 'Maksimal 49.000 karakter (batas gabungan 50.000)'); counters();
+}));
+$('sample').addEventListener('click', () => {
+  $('title').value = SAMPLE.title; $('body').value = SAMPLE.body;
+  fieldError('title', '', 'Judul artikel'); fieldError('body', '', 'Maksimal 49.000 karakter (batas gabungan 50.000)'); counters();
+});
+$('clear').addEventListener('click', () => {
+  $('title').value = ''; $('body').value = ''; counters(); setMsg('', '');
+  state.has = false; state.off = new Set(); buildLegend({});
+  $('result').hidden = true; $('empty').hidden = false; $('res-model').hidden = true;
+  $('res-sub').textContent = 'Belum ada hasil.'; $('title').focus();
+});
+
+async function loadHealth() {
+  const pill = $('pill'), txt = $('pill-text');
+  try {
+    const d = await (await fetch('/health')).json();
+    if (d.model === 'model tidak tersedia') { pill.className = 'status-pill off'; txt.textContent = 'Model tidak tersedia'; }
+    else if (d.trained_model) { pill.className = 'status-pill ok'; txt.textContent = 'Model terlatih aktif'; }
+    else { pill.className = 'status-pill warn'; txt.textContent = 'Baseline aktif (belum terlatih)'; }
+  } catch (_) { pill.className = 'status-pill off'; txt.textContent = 'Server tidak terhubung'; }
+}
+
+buildLegend({}); counters(); loadHealth();
+</script>
+</body>
+</html>
