@@ -9,11 +9,9 @@ Proyek ini dibangun untuk menerapkan teknik Named-Entity Recognition (NER), yait
 2. [Dataset](#-dataset)
 3. [Arsitektur & Alur Kerja](#-arsitektur--alur-kerja)
 4. [Struktur Repositori](#-struktur-repositori)
-5. [Panduan Instalasi & Menjalankan](#-panduan-instalasi--menjalankan)
-6. [Dokumentasi API](#-dokumentasi-api)
-7. [Evaluasi Model](#-evaluasi-model)
-8. [Kasus Uji (Test Cases)](#-kasus-uji-test-cases)
-9. [Tim Pengembang](#-tim-pengembang)
+5. [Evaluasi Model](#-evaluasi-model)
+6. [Kasus Uji (Test Cases)](#-kasus-uji-test-cases)
+7. [Tim Pengembang](#-tim-pengembang)
 
 ---
 
@@ -117,3 +115,58 @@ Sistem ini memisahkan dua alur utama: **Pipeline Pengembangan Model (Offline/Tra
    - **Validasi Input:** Server memvalidasi isi request untuk mencegah input kosong atau teks berlebih.
    - **Ekstraksi Span & Label:** Mesin inferensi memetakan token hasil prediksi kembali ke posisi indeks karakter asli dalam string dokumen.
    - **Integrasi Web UI:** Hasil ekstraksi dikembalikan dalam format JSON terstruktur untuk dirender langsung di antarmuka peramban (*highlight* warna berdasarkan jenis entitas).
+
+  
+## 4. Struktur Repositori
+
+```text
+├── app/
+│   └── main.py                     # Backend API (FastAPI)
+├── web/
+│   └── index.html                  # Antarmuka web pengguna
+├── models/
+│   ├── ner_custom_v1.zip           # Bobot pipeline model spaCy terlatih
+│   ├── Data_&_Anotasi.ipynb        # Notebook persiapan data & anotasi
+│   └── Training_Model_NER_UTS.ipynb# Notebook pelatihan model
+├── notebooks/
+│   ├── 01_profiling_dataset.ipynb  # Profiling data awal
+│   ├── 02_prepare_annotation.ipynb # Format anotasi entitas
+│   └── 03_train_evaluate_ner.ipynb # Evaluasi & perbandingan model
+├── tests/
+│   └── test_api.py                 # Pengujian otomatis API (Pytest)
+├── docs/
+│   └── role2_evaluation_audit.md   # Catatan audit evaluasi model
+└── requirements.txt                # Daftar pustaka & dependensi
+```
+
+## 5. Evaluasi Model
+Kinerja model diuji pada data uji (*test set*) menggunakan evaluasi pencocokan rentang karakter dan tipe label secara tepat (*exact span & entity type matching*).
+
+| Metrik | Model Baseline | Model Terlatih (`ner_custom_v1`) | Peningkatan |
+|---|:---:|:---:|:---:|
+| **Precision** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
+| **Recall** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
+| **F1-Score** | *[Isi nilai]* | *[Isi nilai]* | *[+Δ%]* |
+
+### Temuan Evaluasi & Analisis Kesalahan:
+- **Baseline vs. Adaptasi:** Model terlatih `ner_custom_v1` menunjukkan peningkatan kemampuan deteksi pada entitas spesifik domain perbankan dan singkatan korporat.
+- **Span Boundary Error:** Kesalahan yang masih ditemukan umumnya berupa pemotongan batas teks (*boundary span*) pada nama entitas organisasi yang panjang atau bertingkat.
+- **Kategori Tertinggi:** Entitas lokasi (`GPE`) dan orang (`PERSON`) memiliki tingkat akurasi paling stabil dibandingkan entitas lembaga perbankan kompleks (`ORG`).
+
+## 8. Kasus Uji (Test Cases)
+
+Pengujian sistem dilakukan secara otomatis menggunakan `pytest` (melalui berkas `tests/test_api.py`) untuk memvalidasi fungsionalitas inferensi model, penanganan anomali input, serta stabilitas endpoint API.
+
+| No | Skenario Uji | Deskripsi Input | Hasil yang Diharapkan | Status |
+|:--:|---|---|---|:--:|
+| 1 | **Valid Normal Input** | Teks berita lengkap dengan nama bank, tokoh, dan kota | Status `200 OK`, entitas terdeteksi lengkap beserta offset `start` dan `end` | Passed |
+| 2 | **Empty Input Validation** | `title` atau `body` berupa string kosong (`""`) | Status `422 Unprocessable Entity` / `400 Bad Request` dengan pesan error validasi | Passed |
+| 3 | **Punctuation & Special Characters** | Nama institusi mengandung simbol (misal: `"CIMB-Niaga/Bhd."`) | Model tidak memotong rentang karakter (*span boundary*) tanda baca | Passed |
+| 4 | **Repeated Entities** | Entitas yang sama muncul berulang kali di dalam teks artikel | Semua kemunculan terdeteksi dengan indeks karakter unik masing-masing | Passed |
+| 5 | **Long Text Document** | Artikel berita panjang (> 1.500 kata) | Berhasil diproses tanpa kendala memori maupun *timeout* API | Passed |
+
+## 9. Tim Pengembang
+
+- Role 1 (Data & Anotasi): Pembersihan dataset, validasi teks artikel, penyiapan anotasi label, dan audit konsistensi ground truth.
+- Role 2 (Model & Evaluasi): Pelatihan/adaptasi pipeline spaCy ner_custom_v1, tuning hyperparameter, serta evaluasi metrik (Precision, Recall, F1).
+- Role 3 (Layanan & Deployment): Pembuatan backend FastAPI, UI frontend, penanganan span offset, dan otomasi pengujian API via Pytest/Colab.
