@@ -194,3 +194,6 @@ Pengujian sistem dilakukan secara otomatis menggunakan `pytest` (melalui berkas 
 - Role 1 **(Data & Anotasi)**: Pembersihan dataset, validasi teks artikel, penyiapan anotasi label, dan audit konsistensi ground truth.
 - Role 2 **(Model & Evaluasi)**: Pelatihan/adaptasi pipeline spaCy ner_custom_v1, tuning hyperparameter, serta evaluasi metrik (Precision, Recall, F1).
 - Role 3 **(Layanan & Deployment)**: Pembuatan backend FastAPI, UI frontend, penanganan span offset, dan otomasi pengujian API via Pytest/Colab.
+
+## 8. Link Demo Aplikasi
+https://drive.google.com/file/d/15ClKoZ1C9es2hMk3H5aYSF_kRmjijAlq/view?usp=sharing
